@@ -1,4 +1,4 @@
-# control syntax
+# pattern match
 
 ## Starting
 
