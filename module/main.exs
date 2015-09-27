@@ -1,3 +1,4 @@
+IO.puts  "## Base"
 defmodule MyModule do
   def print(arg) do
     print_impl(arg)
@@ -14,3 +15,21 @@ try do
 rescue
   e in UndefinedFunctionError -> IO.inspect e
 end
+IO.puts ""
+
+
+# arity: the number of operands
+IO.puts "## Overload(provided by different arity)"
+defmodule Overload do
+  def hoge do
+    1
+  end
+  
+  def hoge(n) do
+    n
+  end
+end
+
+IO.inspect Overload.hoge
+IO.inspect Overload.hoge(2)
+IO.puts ""
