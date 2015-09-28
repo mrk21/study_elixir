@@ -33,3 +33,15 @@ end
 IO.inspect Overload.hoge
 IO.inspect Overload.hoge(2)
 IO.puts ""
+
+
+IO.puts "## Default argument"
+defmodule DefaultArgument do
+  def value(v \\ 1) do
+    v
+  end
+end
+
+IO.inspect DefaultArgument.value
+IO.inspect DefaultArgument.value(2)
+IO.puts ""
