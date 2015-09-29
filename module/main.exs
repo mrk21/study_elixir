@@ -45,3 +45,19 @@ end
 IO.inspect DefaultArgument.value
 IO.inspect DefaultArgument.value(2)
 IO.puts ""
+
+
+IO.puts "## Guard Expression"
+defmodule GuardExpression do
+  def hoge(list) when is_list(list) do
+    list
+  end
+end
+
+IO.inspect GuardExpression.hoge([1,2,3])
+try do
+  IO.inspect GuardExpression.hoge(2)
+rescue
+  e in FunctionClauseError -> IO.inspect e
+end
+IO.puts ""
