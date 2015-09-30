@@ -61,3 +61,20 @@ rescue
   e in FunctionClauseError -> IO.inspect e
 end
 IO.puts ""
+
+
+IO.puts "## Import"
+defmodule Import do
+  import Enum, only: [count: 1]
+  
+  def mycount(list) do
+    count(list)
+  end
+end
+IO.inspect Import.mycount([1,2,3])
+try do
+  Import.count([1,2,3])
+rescue
+  e in UndefinedFunctionError -> IO.inspect e
+end
+IO.puts ""
