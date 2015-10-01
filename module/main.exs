@@ -78,3 +78,27 @@ rescue
   e in UndefinedFunctionError -> IO.inspect e
 end
 IO.puts ""
+
+
+IO.puts "## Alias"
+defmodule Alias do
+  alias Enum, as: E
+  
+  def mycount(list) do
+    E.count(list)
+  end
+end
+IO.inspect Alias.mycount([1,2,3])
+
+defmodule Hoge do
+  defmodule Foo do
+    def bar do
+      1
+    end
+  end
+end
+defmodule AliasWithoutAs do
+  alias Hoge.Foo
+  IO.inspect Foo.bar
+end
+IO.puts ""
