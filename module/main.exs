@@ -102,3 +102,15 @@ defmodule AliasWithoutAs do
   IO.inspect Foo.bar
 end
 IO.puts ""
+
+
+IO.puts "## Require"
+defmodule Require do
+  require Enum
+  
+  def mycount(list) do
+    Enum.count(list)
+  end
+end
+IO.inspect Alias.mycount([1,2,3])
+IO.puts ""
