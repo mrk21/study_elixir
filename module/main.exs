@@ -114,3 +114,20 @@ defmodule Require do
 end
 IO.inspect Alias.mycount([1,2,3])
 IO.puts ""
+
+
+
+IO.puts "## Use"
+defmodule UsedModule do
+  def __using__(params) do
+    IO.inspect params 
+    quote do
+      require Enum
+    end
+  end
+end
+defmodule SomeModule do
+  use UsedModule, param: 1
+  IO.inspect Enum.count([1,2,3])
+end
+IO.puts ""
