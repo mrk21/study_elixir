@@ -116,18 +116,29 @@ IO.inspect Alias.mycount([1,2,3])
 IO.puts ""
 
 
-
 IO.puts "## Use"
 defmodule UsedModule do
-  def __using__(params) do
-    IO.inspect params 
+  def __using__(option) do
+    IO.inspect option
     quote do
       require Enum
     end
   end
 end
 defmodule SomeModule do
-  use UsedModule, param: 1
+  use UsedModule, option1: 1
   IO.inspect Enum.count([1,2,3])
 end
+IO.puts ""
+
+
+IO.puts "## Recursion"
+defmodule Calculation do
+  def sum(list), do: sum(list, 0)
+  defp sum([], acc), do: acc
+  defp sum([h|t], acc) do
+    sum(t, h+acc)
+  end
+end
+IO.inspect Calculation.sum([1,2,3])
 IO.puts ""
