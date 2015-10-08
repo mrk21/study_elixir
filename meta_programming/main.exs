@@ -13,10 +13,6 @@ defmodule MacroModule do
     ast
   end
   
-  defmacro value_impl(ast) do
-    ast
-  end
-  
   def call do
     value(IO.puts("1"))
   end
@@ -32,3 +28,26 @@ defmodule UsingMacroModule do
 end
 UsingMacroModule.use_macro
 IO.puts ''
+
+IO.puts '### my_assert'
+defmodule MyAssert do
+  defmacro my_assert(expr) do
+    {operator, _, [lhs, rhs]} = expr
+    quote do
+      expr_str = "#{unquote(lhs)} #{unquote(operator)} #{unquote(rhs)}"
+      if unquote(expr) do
+        IO.puts "#{expr_str} is true"
+      else
+        IO.puts "#{expr_str} is false"
+      end
+    end
+  end
+  
+  def call do
+    a = 1
+    my_assert(a == 1)
+    my_assert(a == 2)
+  end
+end
+
+MyAssert.call
