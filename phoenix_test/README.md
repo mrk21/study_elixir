@@ -24,7 +24,11 @@ $ mix archive.install https://github.com/phoenixframework/phoenix/releases/downl
 $ mix phoenix.new phoenix_test
 ```
 
-## Learn more
+## See
+
+* [Elixir の RoR 風フレームワーク Phoenix のはじめ方 - A Memorandum](http://etc9.hatenablog.com/entry/2015/08/06/001906)
+
+### Phoenix Official
 
 * Official website: http://www.phoenixframework.org/
 * Guides: http://phoenixframework.org/docs/overview
