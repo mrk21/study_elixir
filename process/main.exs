@@ -35,23 +35,32 @@ end
 IO.puts ""
 
 
-IO.puts "## OTP"
-defmodule GenServerSample do
+IO.puts "## OTP: GenServer"
+defmodule KV2 do
   use GenServer
   
   def start_link do
-    GenServer.start_link(__MODULE__, 0)
+    GenServer.start_link(__MODULE__, %{})
   end
   
-  def next(pid) do
-    GenServer.call(pid, :next)
+  def get(pid, key) do
+    GenServer.call(pid, {:get, key})
   end
   
-  def handle_call(:next, _from, current) do
-    {:reply, current, current+1}
+  def put(pid, key, value) do
+    GenServer.call(pid, {:put, key, value})
+  end
+  
+  def handle_call({:get, key}, _from, state) do
+    {:reply, Map.get(state, key), state}
+  end
+  
+  def handle_call({:put, key, value}, _from, state) do
+    {:reply, value, Map.put(state, key, value)}
   end
 end
-IO.inspect {:ok, pid} = GenServerSample.start_link
-IO.inspect GenServerSample.next(pid)
-IO.inspect GenServerSample.next(pid)
+IO.inspect {:ok, pid} = KV2.start_link
+IO.inspect KV2.get(pid, :a)
+IO.inspect KV2.put(pid, :a, 1)
+IO.inspect KV2.get(pid, :a)
 IO.puts ""
