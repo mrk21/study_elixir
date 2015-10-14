@@ -64,3 +64,25 @@ IO.inspect KV2.get(pid, :a)
 IO.inspect KV2.put(pid, :a, 1)
 IO.inspect KV2.get(pid, :a)
 IO.puts ""
+
+
+IO.puts "## OTP: Agent"
+defmodule KV3 do
+  def start_link do
+    Agent.start_link fn -> %{} end
+  end
+  
+  def get(pid, key) do
+    Agent.get pid, fn (map) -> Map.get(map, key) end
+  end
+  
+  def put(pid, key, value) do
+    Agent.update pid, fn (map) -> Map.put(map, key, value) end
+  end
+end
+
+IO.inspect {:ok, pid} = KV3.start_link
+IO.inspect KV3.get(pid, :a)
+IO.inspect KV3.put(pid, :a, 1)
+IO.inspect KV3.get(pid, :a)
+IO.puts ""
