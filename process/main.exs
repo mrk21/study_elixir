@@ -86,3 +86,20 @@ IO.inspect KV3.get(pid, :a)
 IO.inspect KV3.put(pid, :a, 1)
 IO.inspect KV3.get(pid, :a)
 IO.puts ""
+
+
+IO.puts "## OTP: Task"
+defmodule TaskModule do
+  def parallel do
+    [
+      fn -> :timer.sleep(200); IO.puts 1 end,
+      fn -> :timer.sleep(400); IO.puts 2 end,
+      fn -> :timer.sleep(600); IO.puts 3 end,
+      fn -> :timer.sleep(800); IO.puts 4 end
+    ]
+    |> Enum.map(&Task.async/1)
+    |> Enum.map(&Task.await/1)
+  end
+end
+TaskModule.parallel()
+IO.puts ""
