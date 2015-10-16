@@ -103,3 +103,20 @@ defmodule TaskModule do
 end
 TaskModule.parallel()
 IO.puts ""
+
+
+IO.puts "## Process.monitor"
+pid = spawn fn ->
+  :timer.sleep(100)
+  raise RuntimeError
+end
+Process.monitor pid
+
+receive do
+  {:DOWN, ref, :process, pid, msg} ->
+    IO.inspect ref
+    IO.inspect pid
+    IO.inspect msg
+end
+
+IO.puts ""
