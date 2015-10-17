@@ -118,5 +118,28 @@ receive do
     IO.inspect pid
     IO.inspect msg
 end
+IO.puts ""
 
+
+IO.puts "## Process.link"
+pid = spawn fn ->
+  pid = spawn fn ->
+    :timer.sleep(500)
+    raise RuntimeError
+  end
+  Process.link pid
+  IO.puts "start to link with other process"
+  :timer.sleep(2000)
+  IO.puts "never display this message"
+end
+Process.monitor pid
+IO.puts "start the linking process"
+IO.inspect pid
+
+receive do
+  {:DOWN, ref, :process, pid, msg} ->
+    IO.puts "killed the linking process"
+    IO.inspect pid
+    IO.inspect msg
+end
 IO.puts ""
