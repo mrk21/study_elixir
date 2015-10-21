@@ -166,3 +166,47 @@ receive do
     IO.inspect msg
 end
 IO.puts ""
+
+
+IO.puts "## OTP: Supervisor"
+defmodule Echo.Server do
+  alias GenServer, as: GS
+  alias EchoServer, as: ES
+  use GS
+  
+  def start_link do
+    GenServer.start_link(ES, [], name: ES)
+  end
+  
+  def crash! do
+    GS.cast(ES, :crash)
+  end
+  
+  def handle_cast(:crash, _) do
+    raise RuntimeError, message: "Opps!"
+  end
+  
+  def echo(term) do
+    IO.puts "########"
+    GS.call(ES, {:echo, term})
+    IO.puts "22#"
+  end
+  
+  def handle_cast({:echo, str}, _, s) do
+    {:reply, str, s}
+  end
+end
+
+defmodule Echo do
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+    
+    children = [worker(Echo.Server, [])]
+    
+    opts = [strategy: :one_for_one, name: Echo.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+
+IO.inspect Echo.Server.echo("aaa")
+IO.puts ""
