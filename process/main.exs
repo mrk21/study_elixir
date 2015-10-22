@@ -170,16 +170,14 @@ IO.puts ""
 
 IO.puts "## OTP: Supervisor"
 defmodule Echo.Server do
-  alias GenServer, as: GS
-  alias EchoServer, as: ES
-  use GS
+  use GenServer
   
   def start_link do
-    GenServer.start_link(ES, [], name: ES)
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
   
   def crash! do
-    GS.cast(ES, :crash)
+    GenServer.cast(__MODULE__, :crash)
   end
   
   def handle_cast(:crash, _) do
@@ -187,26 +185,25 @@ defmodule Echo.Server do
   end
   
   def echo(term) do
-    IO.puts "########"
-    GS.call(ES, {:echo, term})
-    IO.puts "22#"
+    GenServer.call(__MODULE__, {:echo, term})
   end
   
-  def handle_cast({:echo, str}, _, s) do
+  def handle_call({:echo, str}, _, s) do
     {:reply, str, s}
   end
 end
 
-defmodule Echo do
-  def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-    
-    children = [worker(Echo.Server, [])]
-    
-    opts = [strategy: :one_for_one, name: Echo.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
-end
+import Supervisor.Spec, warn: false
 
-IO.inspect Echo.Server.echo("aaa")
+children = [worker(Echo.Server, [])]
+opts = [
+  strategy: :one_for_one,
+  name: Echo.Supervisor
+]
+IO.inspect {:ok, pid} = Supervisor.start_link(children, opts)
+
+IO.inspect Echo.Server.echo "hey"
+IO.inspect Echo.Server.crash!
+:timer.sleep(1000)
+IO.inspect Echo.Server.echo "foo"
 IO.puts ""
