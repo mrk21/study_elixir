@@ -193,17 +193,52 @@ defmodule Echo.Server do
   end
 end
 
-import Supervisor.Spec, warn: false
+defmodule SupervisorTest do
+  def run do
+    import Supervisor.Spec, warn: false
+    
+    children = [worker(Echo.Server, [])]
+    opts = [
+      strategy: :one_for_one,
+      name: Echo.Supervisor
+    ]
+    IO.inspect {:ok, pid} = Supervisor.start_link(children, opts)
+    IO.inspect Echo.Server.echo "hey"
+    IO.inspect Echo.Server.crash!
+    :timer.sleep(1000)
+    IO.inspect Echo.Server.echo "foo"
+  end
+end
+# SupervisorTest.run
 
-children = [worker(Echo.Server, [])]
-opts = [
-  strategy: :one_for_one,
-  name: Echo.Supervisor
-]
-IO.inspect {:ok, pid} = Supervisor.start_link(children, opts)
+IO.puts "### ModuleBased Supervisor"
+defmodule Echo.Supervisor do
+  use Supervisor
+  
+  def start_link do
+    Supervisor.start_link(__MODULE__, [])
+  end
+  
+  def init([]) do
+    children = [
+      worker(Echo.Server, [])
+    ]
+    opts = [
+      strategy: :one_for_one,
+      name: Echo.Supervisor
+    ]
+    supervise(children, opts)
+  end
+end
 
-IO.inspect Echo.Server.echo "hey"
-IO.inspect Echo.Server.crash!
-:timer.sleep(1000)
-IO.inspect Echo.Server.echo "foo"
+defmodule ModuleBasedSupervisorTest do
+  def run do
+    IO.inspect {:ok, pid} = Echo.Supervisor.start_link()
+    IO.inspect Echo.Server.echo "hey"
+    IO.inspect Echo.Server.crash!
+    :timer.sleep(1000)
+    IO.inspect Echo.Server.echo "foo"
+  end
+end
+ModuleBasedSupervisorTest.run()
 IO.puts ""
