@@ -205,11 +205,15 @@ defmodule SupervisorTest do
     IO.inspect {:ok, pid} = Supervisor.start_link(children, opts)
     IO.inspect Echo.Server.echo "hey"
     IO.inspect Echo.Server.crash!
-    :timer.sleep(1000)
+    :timer.sleep(100)
     IO.inspect Echo.Server.echo "foo"
   end
 end
-# SupervisorTest.run
+spawn fn ->
+  SupervisorTest.run
+end
+:timer.sleep(300)
+
 
 IO.puts "### ModuleBased Supervisor"
 defmodule Echo.Supervisor do
@@ -236,9 +240,12 @@ defmodule ModuleBasedSupervisorTest do
     IO.inspect {:ok, pid} = Echo.Supervisor.start_link()
     IO.inspect Echo.Server.echo "hey"
     IO.inspect Echo.Server.crash!
-    :timer.sleep(1000)
+    :timer.sleep(100)
     IO.inspect Echo.Server.echo "foo"
   end
 end
-ModuleBasedSupervisorTest.run()
+spawn fn ->
+  ModuleBasedSupervisorTest.run()
+end
+:timer.sleep(300)
 IO.puts ""
