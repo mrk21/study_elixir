@@ -8,5 +8,6 @@ get_filename_component(erlang_header_path ${erlang_header_path} DIRECTORY)
 message("erl_nif.h: ${erlang_header_path}")
 
 include_directories(${erlang_header_path})
-set(CMAKE_C_FLAGS "-undefined dynamic_lookup")
+set(CMAKE_C_FLAGS "-fPIC -undefined dynamic_lookup")
+
 add_library(fast_compare SHARED src/fast_compare.c)

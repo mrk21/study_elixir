@@ -11,4 +11,4 @@ defmodule FastCompare do
 end
 
 IO.puts FastCompare.fast_compare(99, 100)
-IO.puts FastCompare.fast_compare(100, 98)
+IO.puts FastCompare.fast_compare(100, 99)
